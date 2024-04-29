@@ -33,7 +33,7 @@ def explain_code(code, language):
     # Generate explanation using OpenAI API
     prompt = f"Explain the following {language} code:\n\n{code}"
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # GPT-3.5 turbo model
+       engine="text-davinci-002",  # GPT-3.5 turbo model
         messages=[
             {"role": "system", "content": prompt}
         ],
