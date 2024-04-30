@@ -1,8 +1,10 @@
 import streamlit as st
 import openai
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 # Set your OpenAI API key
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Password for accessing the chatbot
 PASSWORD = "1234@1234"
