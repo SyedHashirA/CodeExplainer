@@ -2,7 +2,10 @@ import streamlit as st
 import openai
 
 # Set your OpenAI API key
-openai.api_key = "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"
+openai.api_key = "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"
+
+# Password for accessing the chatbot
+PASSWORD = "1234@1234"
 
 def analyze_syntax(code, language):
     # This function analyzes the syntax of the code
@@ -33,7 +36,7 @@ def explain_code(code, language):
     # Generate explanation using OpenAI API
     prompt = f"Explain the following {language} code:\n\n{code}"
     response = openai.ChatCompletion.create(
-       model="gpt-3.5-turbo",  # GPT-3.5 turbo model
+        model="gpt-3.5-turbo",  # GPT-3.5 turbo model
         messages=[
             {"role": "system", "content": prompt}
         ],
@@ -46,30 +49,38 @@ def explain_code(code, language):
 def main():
     st.title("Code Language Chatbot")
 
-    # Initialize session state
-    if 'previous_interactions' not in st.session_state:
-        st.session_state.previous_interactions = []
+    # Password input
+    password = st.text_input("Enter password:", type="password")
 
-    # Language selection dropdown
-    language = st.selectbox("Select code language:", ["Python", "Java", "C"])
+    if password == PASSWORD:
+        st.success("Password correct. You can use the chatbot now.")
 
-    user_input = st.text_area(f"Enter {language} code:", key="input_field")
+        # Initialize session state
+        if 'previous_interactions' not in st.session_state:
+            st.session_state.previous_interactions = []
 
-    if st.button("Explain"):
-        if user_input.strip():
-            if analyze_syntax(user_input, language):
-                explanation = explain_code(user_input, language)
-                st.session_state.previous_interactions.append((user_input, explanation))
-            else:
-                st.error("Invalid syntax for the selected language.")
+        # Language selection dropdown
+        language = st.selectbox("Select code language:", ["Python", "Java", "C"])
 
-    if st.session_state.previous_interactions:
-        for user_code, explanation in st.session_state.previous_interactions:
-            st.write(f"{language.capitalize()} code:")
-            st.code(user_code)
-            st.write("Explanation:")
-            st.write(explanation)
-            st.write("****************************************************************")
+        user_input = st.text_area(f"Enter {language} code:", key="input_field")
+
+        if st.button("Explain"):
+            if user_input.strip():
+                if analyze_syntax(user_input, language):
+                    explanation = explain_code(user_input, language)
+                    st.session_state.previous_interactions.append((user_input, explanation))
+                else:
+                    st.error("Invalid syntax for the selected language.")
+
+        if st.session_state.previous_interactions:
+            for user_code, explanation in st.session_state.previous_interactions:
+                st.write(f"{language.capitalize()} code:")
+                st.code(user_code)
+                st.write("Explanation:")
+                st.write(explanation)
+                st.write("****************************************************************")
+    elif password != "":
+        st.error("Incorrect password. Please try again.")
 
 if __name__ == "__main__":
     main()
